@@ -45,6 +45,6 @@ jobs:
       - name: Tag image
         id: tag-image
         run: |
-          docker tag airbyte/source-facebook-marketing:dev ${{ vars.container_registry_path }}/airbyte-source-facebook-marketing:${{ github.ref_name }}
-          docker push ${{ vars.container_registry_path }}/airbyte-source-facebook-marketing:${{ github.ref_name }}
+          docker tag airbyte/source-facebook-marketing:dev us.gcr.io/maze-pet-project-16102022/airbyte-source-facebook-marketing:${{ github.ref_name }}
+          docker push us.gcr.io/maze-pet-project-16102022/airbyte-source-facebook-marketing:${{ github.ref_name }}
           
