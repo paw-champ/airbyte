@@ -1,0 +1,26 @@
+name: Build connector image
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-connector:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Airbyte
+        uses: actions/checkout@v3
+      - name: Install Airbyte CI from binary
+        id: install-airbyte-ci-binary
+        # if: steps.determine-install-mode.outputs.install-mode == 'binary' || ${{ inputs.is_fork }} == 'true'
+        shell: bash
+        run: |
+          curl -sSL https://connectors.airbyte.com/airbyte-ci/releases/ubuntu/latest/airbyte-ci --output airbyte-ci-bin
+          sudo mv airbyte-ci-bin /usr/local/bin/airbyte-ci
+          sudo chmod +x /usr/local/bin/airbyte-ci
+      - name: Print installed `airbyte-ci` version
+        shell: bash
+        run: |
+          airbyte-ci --version
+          airbyte-ci connectors --name=source-facebook-marketing build
