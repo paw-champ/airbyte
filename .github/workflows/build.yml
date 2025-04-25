@@ -24,8 +24,8 @@ jobs:
         run: |
           airbyte-ci --version
           airbyte-ci connectors --name=source-facebook-marketing build
-          - name: Login to GCR
-      - uses: 'google-github-actions/auth@v2'
+      - name: Login to GCR
+        uses: 'google-github-actions/auth@v2'
         id: auth
         with:
           project_id: maze-pet-project-16102022
