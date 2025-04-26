@@ -6,6 +6,7 @@ import copy
 import logging
 from abc import ABC, abstractmethod
 from enum import Enum
+from time import sleep
 from typing import Any, Iterator, List, Mapping, Optional, Type, Union
 
 import backoff
@@ -256,7 +257,20 @@ class InsightAsyncJob(AsyncJob):
         params["time_range"].update(since=new_start.to_date_string())
         params.update(fields=[pk_name], level=level)
         params.pop("time_increment")  # query all days
-        result = self._edge_object.get_insights(params=params)
+        logger.info(f"Loading {pk_name}s for period {self._interval} with params to split job")
+
+        job = InsightAsyncJob(edge_object=self._edge_object, **params)
+        job.start()
+        for i in range(30):
+            job.update_job()
+            if job.completed:
+                break
+            sleep(10)
+        if not job.completed:
+            raise RuntimeError(f"Job {job} failed to complete in 5 minutes, can't split it.")
+
+        result = job.get_result()
+
         ids = set(row[pk_name] for row in result)
         logger.info(f"Got {len(ids)} {pk_name}s for period {self._interval}: {ids}")
 

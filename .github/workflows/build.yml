@@ -2,8 +2,8 @@ name: Build connector image
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - '*'
 
 jobs:
   build-connector:
