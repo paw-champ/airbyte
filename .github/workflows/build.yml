@@ -42,13 +42,9 @@ jobs:
           registry: us.gcr.io/maze-pet-project-16102022
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
-      - name: Get latest tag
-        id: get-latest-tag
-        run: |
-          echo "TAG=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_ENV
       - name: Tag image
         id: tag-image
         run: |
-          docker tag airbyte/source-facebook-marketing:dev us.gcr.io/maze-pet-project-16102022/airbyte-source-facebook-marketing:${{ steps.get-latest-tag.outputs.tag }}
-          docker push us.gcr.io/maze-pet-project-16102022/airbyte-source-facebook-marketing:${{ steps.get-latest-tag.outputs.tag }}
+          docker tag airbyte/source-facebook-marketing:dev us.gcr.io/maze-pet-project-16102022/airbyte-source-facebook-marketing:${{ github.ref_name }}
+          docker push us.gcr.io/maze-pet-project-16102022/airbyte-source-facebook-marketing:${{ github.ref_name }}
           

@@ -259,7 +259,7 @@ class InsightAsyncJob(AsyncJob):
         params.pop("time_increment")  # query all days
         logger.info(f"Loading {pk_name}s for period {self._interval} with params to split job")
 
-        job = InsightAsyncJob(edge_object=self._edge_object, **params)
+        job = InsightAsyncJob(edge_object=self._edge_object, params=params, job_timeout=self._job_timeout)
         job.start()
         for i in range(30):
             job.update_job()
@@ -399,3 +399,5 @@ class InsightAsyncJob(AsyncJob):
         job_id = self._job["report_run_id"] if self._job else "<None>"
         breakdowns = self._params["breakdowns"]
         return f"InsightAsyncJob(id={job_id}, {self._edge_object}, time_range={self._interval}, breakdowns={breakdowns})"
+
+
