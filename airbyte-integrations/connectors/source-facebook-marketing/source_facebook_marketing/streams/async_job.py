@@ -259,7 +259,7 @@ class InsightAsyncJob(AsyncJob):
         params.pop("time_increment")  # query all days
         logger.info(f"Loading {pk_name}s for period {self._interval} with params to split job")
 
-        job = InsightAsyncJob(edge_object=self._edge_object, params=params, job_timeout=self._job_timeout)
+        job = InsightAsyncJob(edge_object=self._edge_object, params=params, job_timeout=self._job_timeout, api=self._api, interval=self.interval)
         job.start()
         for i in range(30):
             job.update_job()
