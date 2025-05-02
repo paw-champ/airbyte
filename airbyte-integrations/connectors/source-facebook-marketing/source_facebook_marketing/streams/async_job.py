@@ -296,6 +296,10 @@ class InsightAsyncJob(AsyncJob):
         if not self._async_only:
             try:
                 self._sync_iterator = self._edge_object.get_insights(params=self._params)
+                logger.info(
+                    "Fetched insights synchronously for job: {}",
+                    self,
+                )
             except Exception:
                 self._sync_iterator = None
         self._job = self._edge_object.get_insights(params=self._params, is_async=True)
