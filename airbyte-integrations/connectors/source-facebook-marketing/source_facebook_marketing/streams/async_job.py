@@ -200,6 +200,7 @@ class InsightAsyncJob(AsyncJob):
         edge_object: Union[AdAccount, Campaign, AdSet, Ad],
         params: Mapping[str, Any],
         job_timeout: Duration,
+        async_only = False,
         **kwargs,
     ):
         """Initialize
@@ -221,6 +222,8 @@ class InsightAsyncJob(AsyncJob):
         self._start_time = None
         self._finish_time = None
         self._failed = False
+        self._sync_iterator = None
+        self._async_only = async_only
 
     def split_job(self) -> List["AsyncJob"]:
         """Split existing job in few smaller ones grouped by ParentAsyncJob class."""
@@ -259,7 +262,7 @@ class InsightAsyncJob(AsyncJob):
         params.pop("time_increment")  # query all days
         logger.info(f"Loading {pk_name}s for period {self._interval} with params to split job")
 
-        job = InsightAsyncJob(edge_object=self._edge_object, params=params, job_timeout=self._job_timeout, api=self._api, interval=self.interval)
+        job = InsightAsyncJob(edge_object=self._edge_object, params=params, job_timeout=self._job_timeout, api=self._api, interval=self.interval, async_only=True)
         job.start()
         for i in range(30):
             job.update_job()
@@ -290,7 +293,11 @@ class InsightAsyncJob(AsyncJob):
         """Start remote job"""
         if self._job:
             raise RuntimeError(f"{self}: Incorrect usage of start - the job already started, use restart instead")
-
+        if not self._async_only:
+            try:
+                self._sync_iterator = self._edge_object.get_insights(params=self._params)
+            except Exception:
+                self._sync_iterator = None
         self._job = self._edge_object.get_insights(params=self._params, is_async=True)
         self._start_time = pendulum.now()
         self._attempt_number += 1
@@ -324,11 +331,18 @@ class InsightAsyncJob(AsyncJob):
         :return: True if completed, False - if task still running
         :raises: JobException in case job failed to start, failed or timed out
         """
+
+        if self._sync_iterator is not None:
+            return True
+
         return bool(self._finish_time is not None)
 
     @property
     def failed(self) -> bool:
         """Tell if the job previously failed"""
+        if self._sync_iterator is not None:
+            return False
+
         return self._failed
 
     def _batch_success_handler(self, response: FacebookResponse):
@@ -342,6 +356,9 @@ class InsightAsyncJob(AsyncJob):
 
     def update_job(self, batch: Optional[FacebookAdsApiBatch] = None):
         """Method to retrieve job's status"""
+        if self._sync_iterator:
+            return # Sync insights do not need to be updated
+
         if not self._job:
             raise RuntimeError(f"{self}: Incorrect usage of the method - the job is not started")
 
@@ -367,6 +384,9 @@ class InsightAsyncJob(AsyncJob):
 
         :return: True if the job is completed, False - if the job is still running
         """
+        if self._sync_iterator:
+            return True
+
         job_status = self._job["async_status"]
         percent = self._job["async_percent_completion"]
         logger.info(f"{self}: is {percent} complete ({job_status})")
@@ -390,6 +410,9 @@ class InsightAsyncJob(AsyncJob):
     @backoff_policy
     def get_result(self) -> Any:
         """Retrieve result of the finished job."""
+        if self._sync_iterator:
+            return self._sync_iterator
+
         if not self._job or self.failed:
             raise RuntimeError(f"{self}: Incorrect usage of get_result - the job is not started or failed")
         return self._job.get_result(params={"limit": self.page_size})
