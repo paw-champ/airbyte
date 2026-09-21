@@ -16,6 +16,10 @@ jobs:
     steps:
       - name: Checkout Airbyte
         uses: actions/checkout@v3
+      - name: Attach HEAD to a branch
+        # a tag checkout leaves HEAD detached and airbyte-ci fails to resolve the active branch
+        if: github.ref_type == 'tag'
+        run: git switch -C master
       - name: Install Airbyte CI from binary
         id: install-airbyte-ci-binary
         # if: steps.determine-install-mode.outputs.install-mode == 'binary' || ${{ inputs.is_fork }} == 'true'
