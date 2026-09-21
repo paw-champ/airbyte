@@ -4,6 +4,7 @@
 
 from urllib.parse import parse_qsl, urlparse, urlunparse
 
+from facebook_business import FacebookSession
 from facebook_business.api import Cursor
 
 
@@ -47,6 +48,9 @@ class CursorPatch(Cursor):
 
         if "paging" in response and "next" in response["paging"]:
             path = response["paging"]["next"]
+            # Facebook returns absolute next page links, route them through the configured Graph API base url
+            if path.startswith(FacebookSession.GRAPH):
+                path = self._api._session.GRAPH + path[len(FacebookSession.GRAPH) :]
             # Here comes the magic.
             # self._path used to be path, self.params used to be {}
             # Now we separate params from the rest.

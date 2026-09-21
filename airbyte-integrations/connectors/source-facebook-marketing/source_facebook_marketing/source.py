@@ -82,6 +82,11 @@ class SourceFacebookMarketing(AbstractSource):
 
         return config
 
+    @staticmethod
+    def _get_api(config: ConnectorConfig) -> API:
+        access_token = config.credentials.access_token if config.credentials is not None else config.access_token
+        return API(access_token=access_token, page_size=config.page_size, graph_api_base_url=config.graph_api_base_url)
+
     def check_connection(self, logger: logging.Logger, config: Mapping[str, Any]) -> Tuple[bool, Optional[Any]]:
         """Connection check to validate that the user-provided config can be used to connect to the underlying API
 
@@ -97,10 +102,7 @@ class SourceFacebookMarketing(AbstractSource):
             if config.start_date and config.end_date < config.start_date:
                 return False, "End date must be equal or after start date."
 
-            if config.credentials is not None:
-                api = API(access_token=config.credentials.access_token, page_size=config.page_size)
-            else:
-                api = API(access_token=config.access_token, page_size=config.page_size)
+            api = self._get_api(config)
 
             for account_id in config.account_ids:
                 # Get Ad Account to check creds
@@ -134,10 +136,7 @@ class SourceFacebookMarketing(AbstractSource):
             config.start_date = validate_start_date(config.start_date)
             config.end_date = validate_end_date(config.start_date, config.end_date)
 
-        if config.credentials is not None:
-            api = API(access_token=config.credentials.access_token, page_size=config.page_size)
-        else:
-            api = API(access_token=config.access_token, page_size=config.page_size)
+        api = self._get_api(config)
 
         # if start_date not specified then set default start_date for report streams to 2 years ago
         report_start_date = config.start_date or pendulum.now().add(years=-2)

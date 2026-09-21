@@ -1,5 +1,13 @@
 {
   "properties": {
+    "ad_extension_domain": {
+      "description": "Insights breakdown by ad extension domain.",
+      "type": ["null", "string"]
+    },
+    "ad_extension_url": {
+      "description": "Insights breakdown by ad extension url.",
+      "type": ["null", "string"]
+    },
     "ad_format_asset": {
       "description": "The format of the ad asset used in the campaign.",
       "type": ["null", "string"]
@@ -24,6 +32,10 @@
       "description": "The ID of the main content or message of the ad.",
       "type": ["null", "string"]
     },
+    "breakdown_ad_objective": {
+      "description": "Insights breakdown by breakdown ad objective.",
+      "type": ["null", "string"]
+    },
     "breakdown_reporting_ad_id": {
       "type": ["null", "string"],
       "description": "The ID of the ad for breakdown reporting."
@@ -44,12 +56,40 @@
       "type": ["null", "string"],
       "description": "Coarse conversion value for the ad."
     },
+    "comscore_market": {
+      "description": "Insights breakdown by comscore market.",
+      "type": ["null", "string"]
+    },
     "conversion_destination": {
       "type": ["null", "string"],
       "description": "The destination of the conversion."
     },
     "country": {
       "description": "The country where the ad is being displayed.",
+      "type": ["null", "string"]
+    },
+    "creative_automation_asset_id": {
+      "description": "Insights breakdown by creative automation asset id.",
+      "type": ["null", "string"]
+    },
+    "creative_relaxation_asset_type": {
+      "description": "Insights breakdown by creative relaxation asset type.",
+      "type": ["null", "string"]
+    },
+    "crm_advertiser_l12_territory_ids": {
+      "description": "Insights breakdown by crm advertiser l12 territory ids.",
+      "type": ["null", "string"]
+    },
+    "crm_advertiser_subvertical_id": {
+      "description": "Insights breakdown by crm advertiser subvertical id.",
+      "type": ["null", "string"]
+    },
+    "crm_advertiser_vertical_id": {
+      "description": "Insights breakdown by crm advertiser vertical id.",
+      "type": ["null", "string"]
+    },
+    "crm_ult_advertiser_id": {
+      "description": "Insights breakdown by crm ult advertiser id.",
       "type": ["null", "string"]
     },
     "description_asset": {
@@ -72,12 +112,24 @@
       "description": "Designated Market Area for ad targeting in the United States.",
       "type": ["null", "string"]
     },
+    "existing_post_id": {
+      "description": "Insights breakdown by existing post id.",
+      "type": ["null", "string"]
+    },
     "fidelity_type": {
       "type": ["null", "string"],
       "description": "The fidelity type of the ad."
     },
+    "flexible_format_asset_type": {
+      "description": "Insights breakdown by flexible format asset type.",
+      "type": ["null", "string"]
+    },
     "frequency_value": {
       "description": "The number of times an ad was shown to a unique user.",
+      "type": ["null", "string"]
+    },
+    "gen_ai_asset_type": {
+      "description": "Insights breakdown by gen ai asset type.",
       "type": ["null", "string"]
     },
     "gender": {
@@ -112,6 +164,30 @@
     "impression_device": {
       "description": "The device type (e.g., smartphone, tablet) that generated the ad impression.",
       "type": ["null", "string"]
+    },
+    "impression_view_time_advertiser_hour_v2": {
+      "description": "Insights breakdown by impression view time advertiser hour v2.",
+      "type": ["null", "string"]
+    },
+    "instagram_ads_follow_type": {
+      "description": "Insights breakdown by instagram ads follow type.",
+      "type": ["null", "string"]
+    },
+    "instagram_ads_instagram_media_product_type": {
+      "description": "Insights breakdown by instagram ads instagram media product type.",
+      "type": ["null", "string"]
+    },
+    "instagram_ads_time_since_creation_bucket": {
+      "description": "Insights breakdown by instagram ads time since creation bucket.",
+      "type": ["null", "string"]
+    },
+    "internal_campaign_id": {
+      "description": "Insights breakdown by internal campaign id.",
+      "type": ["null", "string"]
+    },
+    "is_auto_advance": {
+      "description": "Insights breakdown by is auto advance.",
+      "type": ["null", "boolean"]
     },
     "is_conversion_id_modeled": {
       "type": ["null", "boolean"],
@@ -177,6 +253,14 @@
       "description": "The Marketing Mix Model (MMM) used to measure the ad campaign.",
       "type": ["null", "string"]
     },
+    "overlap_segment": {
+      "description": "Insights breakdown by overlap segment.",
+      "type": ["null", "string"]
+    },
+    "pa_creator_ig_handle": {
+      "description": "Insights breakdown by pa creator ig handle.",
+      "type": ["null", "string"]
+    },
     "place_page_id": {
       "description": "The identifier of the Facebook Page associated with the ad.",
       "type": ["null", "string"]
@@ -188,6 +272,38 @@
     "postback_sequence_index": {
       "type": ["null", "integer"],
       "description": "Index of the postback sequence."
+    },
+    "product_brand_breakdown": {
+      "description": "Insights breakdown by product brand breakdown.",
+      "type": ["null", "string"]
+    },
+    "product_category_breakdown": {
+      "description": "Insights breakdown by product category breakdown.",
+      "type": ["null", "string"]
+    },
+    "product_custom_label_0_breakdown": {
+      "description": "Insights breakdown by product custom label 0 breakdown.",
+      "type": ["null", "string"]
+    },
+    "product_custom_label_1_breakdown": {
+      "description": "Insights breakdown by product custom label 1 breakdown.",
+      "type": ["null", "string"]
+    },
+    "product_custom_label_2_breakdown": {
+      "description": "Insights breakdown by product custom label 2 breakdown.",
+      "type": ["null", "string"]
+    },
+    "product_custom_label_3_breakdown": {
+      "description": "Insights breakdown by product custom label 3 breakdown.",
+      "type": ["null", "string"]
+    },
+    "product_custom_label_4_breakdown": {
+      "description": "Insights breakdown by product custom label 4 breakdown.",
+      "type": ["null", "string"]
+    },
+    "product_group_content_id_breakdown": {
+      "description": "Insights breakdown by product group content id breakdown.",
+      "type": ["null", "string"]
     },
     "product_id": {
       "description": "The identifier of the product featured in the ad.",
@@ -201,8 +317,24 @@
       "type": ["null", "boolean"],
       "description": "Indicates if the ad is a redownload."
     },
+    "reels_trending_topic": {
+      "description": "Insights breakdown by reels trending topic.",
+      "type": ["null", "string"]
+    },
     "region": {
       "description": "The region being targeted by the ad campaign.",
+      "type": ["null", "string"]
+    },
+    "rta_ugc_topic": {
+      "description": "Insights breakdown by rta ugc topic.",
+      "type": ["null", "string"]
+    },
+    "rule_set_id": {
+      "description": "Insights breakdown by rule set id.",
+      "type": ["null", "string"]
+    },
+    "rule_set_name": {
+      "description": "Insights breakdown by rule set name.",
       "type": ["null", "string"]
     },
     "signal_source_bucket": {
@@ -278,6 +410,10 @@
     },
     "video_asset_id": {
       "description": "The ID of the video asset used in the ad.",
+      "type": ["null", "string"]
+    },
+    "zip": {
+      "description": "Insights breakdown by zip.",
       "type": ["null", "string"]
     }
   }

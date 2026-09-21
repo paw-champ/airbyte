@@ -6,6 +6,7 @@ import json
 import logging
 from dataclasses import dataclass
 from time import sleep
+from typing import Optional
 
 import backoff
 import pendulum
@@ -177,10 +178,12 @@ class MyFacebookAdsApi(FacebookAdsApi):
 class API:
     """Simple wrapper around Facebook API"""
 
-    def __init__(self, access_token: str, page_size: int = 100):
+    def __init__(self, access_token: str, page_size: int = 100, graph_api_base_url: Optional[str] = None):
         self._accounts = {}
         # design flaw in MyFacebookAdsApi requires such strange set of new default api instance
         self.api = MyFacebookAdsApi.init(access_token=access_token, crash_log=False)
+        if graph_api_base_url:
+            self.api._session.GRAPH = graph_api_base_url.rstrip("/")
         # adding the default page size from config to the api base class
         # reference issue: https://github.com/airbytehq/airbyte/issues/25383
         setattr(self.api, "default_page_size", page_size)

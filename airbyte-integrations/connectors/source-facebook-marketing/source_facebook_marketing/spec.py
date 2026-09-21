@@ -306,6 +306,15 @@ class ConnectorConfig(BaseConfig):
         default=60,
     )
 
+    graph_api_base_url: Optional[str] = Field(
+        title="Graph API Base URL",
+        order=13,
+        default="https://graph.facebook.com",
+        pattern=r"^https?://.+$",
+        examples=["https://graph.facebook.com"],
+        description="Base URL of the Facebook Graph API. Change it only if requests have to go through a proxy or a gateway.",
+    )
+
     action_breakdowns_allow_empty: bool = Field(
         description="Allows action_breakdowns to be an empty list",
         default=True,

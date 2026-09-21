@@ -44,17 +44,25 @@ class AdCreatives(FBMarketingStream):
     """
 
     entity_prefix = "adcreative"
+    # "thumbnail_data_url" is computed by the connector, the instagram fields do not exist in the Marketing API since v22.0
+    # and stay in the schema only to keep existing catalogs valid
+    non_requestable_fields = {
+        "thumbnail_data_url",
+        "effective_instagram_story_id",
+        "instagram_actor_id",
+        "instagram_story_id",
+    }
 
     def __init__(self, fetch_thumbnail_images: bool = False, **kwargs):
         super().__init__(**kwargs)
         self._fetch_thumbnail_images = fetch_thumbnail_images
 
     def fields(self, **kwargs) -> List[str]:
-        """Remove "thumbnail_data_url" field because it is a computed field, and it's not a field that we can request from Facebook"""
+        """Schema properties that can be requested from Facebook"""
         if self._fields:
             return self._fields
 
-        self._fields = [f for f in super().fields(**kwargs) if f != "thumbnail_data_url"]
+        self._fields = [f for f in super().fields(**kwargs) if f not in self.non_requestable_fields]
         return self._fields
 
     def read_records(

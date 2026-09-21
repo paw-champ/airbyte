@@ -304,6 +304,17 @@ files = [
 ]
 
 [[package]]
+name = "capi-param-builder-python"
+version = "1.3.2"
+description = "Parameter builder SDK for Conversion API events"
+optional = false
+python-versions = "*"
+files = [
+    {file = "capi_param_builder_python-1.3.2-py3-none-any.whl", hash = "sha256:6799999a2eb16f95788145780e8f5d5b4574db51645216e9daea6f7d12483eff"},
+    {file = "capi_param_builder_python-1.3.2.tar.gz", hash = "sha256:fb926423308bf2754cef1e1bf0fed2d3d58cfad6b660fcb86ca2dcabd6a40eec"},
+]
+
+[[package]]
 name = "cattrs"
 version = "24.1.3"
 description = "Composable complex class support for attrs and dataclasses."
@@ -656,17 +667,18 @@ test = ["pytest (>=6)"]
 
 [[package]]
 name = "facebook-business"
-version = "21.0.5"
+version = "25.0.3"
 description = "Facebook Business SDK"
 optional = false
 python-versions = "*"
 files = [
-    {file = "facebook_business-21.0.5-py3-none-any.whl", hash = "sha256:8497eb7fc1fd6814bf90ffb4ee6d376975781785fa417ff0dbc689215245ef5d"},
-    {file = "facebook_business-21.0.5.tar.gz", hash = "sha256:5b21f06315ff0634a0752affd291a44d5f30686e248eb1de1b8908587511e2c3"},
+    {file = "facebook_business-25.0.3-py3-none-any.whl", hash = "sha256:dbe12170b6b63bb554670b6e4f3c40e3ca9690fdd9dacddc483ee127f760b754"},
+    {file = "facebook_business-25.0.3.tar.gz", hash = "sha256:cf498ee3638b0d55694affe2384218bc9698892eb5fb59fb8ce3febe74aafbe0"},
 ]
 
 [package.dependencies]
 aiohttp = {version = "*", markers = "python_version >= \"3.5.3\""}
+capi-param-builder-python = ">=1.3.0"
 curlify = ">=2.1.0"
 pycountry = ">=19.8.18"
 requests = ">=2.3.0"
@@ -2665,4 +2677,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10,<3.12"
-content-hash = "569b2ec2f834600838773487da2e80403f441e6bb7730e1a9818b76e985b2f23"
+content-hash = "719423c36ee9062a8eaed1c2ed74ea5732cdb0f85da5bca0cedfa4ce9bee0d9f"

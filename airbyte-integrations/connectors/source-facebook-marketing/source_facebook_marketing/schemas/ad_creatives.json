@@ -631,8 +631,12 @@
       "description": "The type of call-to-action for the ad creative.",
       "type": ["null", "string"]
     },
+    "effective_instagram_media_id": {
+      "description": "The effective Instagram media ID associated with the ad creative.",
+      "type": ["null", "string"]
+    },
     "effective_instagram_story_id": {
-      "description": "The effective Instagram story ID associated with the ad creative.",
+      "description": "Not available since Marketing API v22.0, always null. Use effective_instagram_media_id.",
       "type": ["null", "string"]
     },
     "effective_object_story_id": {
@@ -652,7 +656,11 @@
       "$ref": "ads_image_crops.json"
     },
     "instagram_actor_id": {
-      "description": "Instagram actor ID associated with the ad creative.",
+      "description": "Not available since Marketing API v22.0, always null. Use instagram_user_id.",
+      "type": ["null", "string"]
+    },
+    "instagram_user_id": {
+      "description": "Instagram user ID associated with the ad creative.",
       "type": ["null", "string"]
     },
     "instagram_permalink_url": {
@@ -660,7 +668,7 @@
       "type": ["null", "string"]
     },
     "instagram_story_id": {
-      "description": "ID of the story on Instagram.",
+      "description": "Not available since Marketing API v22.0, always null. Use source_instagram_media_id.",
       "type": ["null", "string"]
     },
     "link_og_id": {
@@ -678,6 +686,9 @@
           "type": ["null", "string"]
         },
         "instagram_actor_id": {
+          "type": ["null", "string"]
+        },
+        "instagram_user_id": {
           "type": ["null", "string"]
         },
         "link_data": {

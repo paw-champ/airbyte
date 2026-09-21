@@ -181,3 +181,29 @@ class TestMyFacebookAdsApi:
         account = api.get_account(account_id)
         assert isinstance(account, AdAccount)
         assert account.get_id() == "act_test"
+
+    def test_custom_graph_api_base_url(self, account_id, requests_mock):
+        base_url = "https://fb-proxy.example.com"
+        api = source_facebook_marketing.api.API(access_token="foo", graph_api_base_url=f"{base_url}/")
+        requests_mock.register_uri("GET", f"{base_url}/{FB_API_VERSION}/act_{account_id}/", [{"json": {"id": "act_test"}}])
+
+        assert api.get_account(account_id).get_id() == "act_test"
+        assert FacebookSession.GRAPH == "https://graph.facebook.com"
+
+    def test_next_page_uses_custom_graph_api_base_url(self, account_id, requests_mock):
+        base_url = "https://fb-proxy.example.com"
+        source_facebook_marketing.api.API(access_token="foo", graph_api_base_url=base_url)
+        campaigns_path = f"/{FB_API_VERSION}/act_{account_id}/campaigns"
+        requests_mock.register_uri(
+            "GET",
+            f"{base_url}{campaigns_path}",
+            [
+                {"json": {"data": [{"id": "1"}], "paging": {"next": f"{FacebookSession.GRAPH}{campaigns_path}?after=cursor"}}},
+                {"json": {"data": [{"id": "2"}]}},
+            ],
+        )
+
+        campaigns = AdAccount(f"act_{account_id}").get_campaigns()
+
+        assert [campaign["id"] for campaign in campaigns] == ["1", "2"]
+        assert requests_mock.last_request.qs["after"] == ["cursor"]

@@ -4,9 +4,11 @@
 
 import pendulum
 import pytest
+from facebook_business.adobjects.adcreative import AdCreative
 from pendulum import duration
 from source_facebook_marketing.api import MyFacebookAdsApi
 from source_facebook_marketing.streams import (
+    AdCreatives,
     AdSets,
     AdsInsights,
     AdsInsightsActionType,
@@ -171,3 +173,20 @@ def test_custom_ads_insights_action_report_times(some_config):
 
     stream = AdsInsights(action_report_time="impression", **kwargs)
     assert stream.action_report_time == "impression"
+
+
+def test_ad_creatives_requests_only_fields_known_to_api(some_config):
+    stream = AdCreatives(api=None, account_ids=some_config["account_ids"])
+    api_fields = {value for name, value in vars(AdCreative.Field).items() if not name.startswith("_")}
+
+    assert set(stream.fields()) <= api_fields
+
+
+def test_ad_creatives_keeps_fields_missing_in_api_in_schema(some_config):
+    stream = AdCreatives(api=None, account_ids=some_config["account_ids"])
+    stream.configured_json_schema = stream.get_json_schema()
+    missing_in_api = {"effective_instagram_story_id", "instagram_actor_id", "instagram_story_id"}
+
+    assert missing_in_api <= set(stream.get_json_schema()["properties"])
+    assert not missing_in_api & set(stream.fields())
+    assert {"effective_instagram_media_id", "instagram_user_id", "source_instagram_media_id"} <= set(stream.fields())
