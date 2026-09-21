@@ -76,6 +76,28 @@ class ServiceAccountCredentials(BaseModel):
     )
 
 
+class GraphApiHeader(BaseModel):
+    """HTTP header sent with every Graph API request"""
+
+    class Config:
+        title = "Header"
+
+    name: constr(strip_whitespace=True, regex=r"^[A-Za-z0-9!#$%&'*+.^_`|~-]+$") = Field(
+        title="Name",
+        order=0,
+        examples=["X-Api-Key"],
+        description="Name of the header.",
+    )
+
+    # line breaks are rejected here because the HTTP client reports an invalid header together with its value
+    value: constr(strip_whitespace=True, min_length=1, regex=r"^[^\r\n]+$") = Field(
+        title="Value",
+        order=1,
+        airbyte_secret=True,
+        description="Value of the header.",
+    )
+
+
 class InsightConfig(BaseModel):
     """Config for custom insights"""
 
@@ -313,6 +335,15 @@ class ConnectorConfig(BaseConfig):
         pattern=r"^https?://.+$",
         examples=["https://graph.facebook.com"],
         description="Base URL of the Facebook Graph API. Change it only if requests have to go through a proxy or a gateway.",
+    )
+
+    graph_api_headers: Optional[List[GraphApiHeader]] = Field(
+        title="Graph API Request Headers",
+        order=14,
+        description=(
+            "Additional HTTP headers sent with every Graph API request, "
+            "for example an authentication key required by the proxy set as Graph API Base URL."
+        ),
     )
 
     action_breakdowns_allow_empty: bool = Field(

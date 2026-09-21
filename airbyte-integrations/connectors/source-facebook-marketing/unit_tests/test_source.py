@@ -7,6 +7,7 @@ from copy import deepcopy
 from unittest.mock import call
 
 import pytest
+import requests
 from facebook_business import FacebookAdsApi, FacebookSession
 from source_facebook_marketing import SourceFacebookMarketing
 from source_facebook_marketing.spec import ConnectorConfig
@@ -228,3 +229,36 @@ def test_check_config(config_gen, requests_mock, fb_marketing):
 
     assert command_check(fb_marketing, config_gen(end_date=...)) == AirbyteConnectionStatus(status=Status.SUCCEEDED, message=None)
     assert command_check(fb_marketing, config_gen(end_date="")) == AirbyteConnectionStatus(status=Status.SUCCEEDED, message=None)
+
+
+def test_graph_api_headers_are_passed_to_api(config_gen, fb_marketing):
+    config = fb_marketing._validate_and_transform(config_gen(graph_api_headers=[{"name": "X-Api-Key", "value": " proxy-key\n"}]))
+
+    assert fb_marketing._get_api(config).api._session.requests.headers["X-Api-Key"] == "proxy-key"
+
+
+def test_no_graph_api_headers_by_default(config, fb_marketing):
+    api = fb_marketing._get_api(fb_marketing._validate_and_transform(config))
+
+    assert api.api._session.requests.headers == requests.Session().headers
+
+
+def test_graph_api_header_value_is_secret(fb_marketing):
+    header_properties = fb_marketing.spec().connectionSpecification["properties"]["graph_api_headers"]["items"]["properties"]
+
+    assert header_properties["value"]["airbyte_secret"] is True
+
+
+@pytest.mark.parametrize(
+    "header",
+    [
+        {"name": "X Api Key", "value": "SECRET"},
+        {"name": "X-Api-Key", "value": "proxy\nSECRET"},
+    ],
+)
+def test_check_connection_invalid_graph_api_header_does_not_expose_value(header, config_gen, logger_mock, fb_marketing):
+    ok, error = fb_marketing.check_connection(logger_mock, config=config_gen(graph_api_headers=[header]))
+
+    assert not ok
+    assert "graph_api_headers" in error
+    assert "SECRET" not in error

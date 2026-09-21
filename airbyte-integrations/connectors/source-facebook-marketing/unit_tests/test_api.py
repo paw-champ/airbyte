@@ -207,3 +207,20 @@ class TestMyFacebookAdsApi:
 
         assert [campaign["id"] for campaign in campaigns] == ["1", "2"]
         assert requests_mock.last_request.qs["after"] == ["cursor"]
+
+    def test_graph_api_headers_sent_with_every_request(self, account_id, requests_mock):
+        base_url = "https://fb-proxy.example.com"
+        source_facebook_marketing.api.API(access_token="foo", graph_api_base_url=base_url, graph_api_headers={"X-Api-Key": "proxy-key"})
+        campaigns_path = f"/{FB_API_VERSION}/act_{account_id}/campaigns"
+        requests_mock.register_uri(
+            "GET",
+            f"{base_url}{campaigns_path}",
+            [
+                {"json": {"data": [{"id": "1"}], "paging": {"next": f"{FacebookSession.GRAPH}{campaigns_path}?after=cursor"}}},
+                {"json": {"data": [{"id": "2"}]}},
+            ],
+        )
+
+        list(AdAccount(f"act_{account_id}").get_campaigns())
+
+        assert [request.headers["X-Api-Key"] for request in requests_mock.request_history] == ["proxy-key", "proxy-key"]

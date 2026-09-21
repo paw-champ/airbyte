@@ -645,6 +645,37 @@
         "examples": ["https://graph.facebook.com"],
         "type": "string"
       },
+      "graph_api_headers": {
+        "title": "Graph API Request Headers",
+        "description": "Additional HTTP headers sent with every Graph API request, for example an authentication key required by the proxy set as Graph API Base URL.",
+        "order": 14,
+        "type": "array",
+        "items": {
+          "title": "Header",
+          "description": "HTTP header sent with every Graph API request",
+          "type": "object",
+          "properties": {
+            "name": {
+              "title": "Name",
+              "description": "Name of the header.",
+              "order": 0,
+              "examples": ["X-Api-Key"],
+              "pattern": "^[A-Za-z0-9!#$%&'*+.^_`|~-]+$",
+              "type": "string"
+            },
+            "value": {
+              "title": "Value",
+              "description": "Value of the header.",
+              "order": 1,
+              "airbyte_secret": true,
+              "minLength": 1,
+              "pattern": "^[^\\r\\n]+$",
+              "type": "string"
+            }
+          },
+          "required": ["name", "value"]
+        }
+      },
       "action_breakdowns_allow_empty": {
         "title": "Action Breakdowns Allow Empty",
         "description": "Allows action_breakdowns to be an empty list",

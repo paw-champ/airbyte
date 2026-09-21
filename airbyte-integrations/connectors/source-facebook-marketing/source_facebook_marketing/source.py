@@ -85,7 +85,12 @@ class SourceFacebookMarketing(AbstractSource):
     @staticmethod
     def _get_api(config: ConnectorConfig) -> API:
         access_token = config.credentials.access_token if config.credentials is not None else config.access_token
-        return API(access_token=access_token, page_size=config.page_size, graph_api_base_url=config.graph_api_base_url)
+        return API(
+            access_token=access_token,
+            page_size=config.page_size,
+            graph_api_base_url=config.graph_api_base_url,
+            graph_api_headers={header.name: header.value for header in config.graph_api_headers or []},
+        )
 
     def check_connection(self, logger: logging.Logger, config: Mapping[str, Any]) -> Tuple[bool, Optional[Any]]:
         """Connection check to validate that the user-provided config can be used to connect to the underlying API
